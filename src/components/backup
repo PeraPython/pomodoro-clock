@@ -1,0 +1,87 @@
+import React, { Component } from 'react';
+import './clock.css';
+
+class Clock extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            break: 5,
+            length: 25,
+            isCounting: false,
+            timer: "25:00"
+        }
+        this.resetAll = this.resetAll.bind(this);
+        this.startStop = this.startStop.bind(this);
+    }
+    resetAll(){
+        this.setState({ break: 5, length: 25, isCounting: true });
+    }
+
+    startStop(){
+            let minutes = this.state.length-1;
+            let seconds = 60;
+            const clockFunction = setInterval(() => {
+                if(seconds === 0){
+                    minutes -= 1;
+                    seconds = 59; 
+                    document.getElementById('time-left').innerText = ( minutes < 10 ? "0"+minutes : minutes ) + ":" + (seconds < 10 ? "0"+seconds : seconds);
+                } else{
+                    seconds -= 1;
+                    document.getElementById('time-left').innerText = ( minutes < 10 ? "0"+minutes : minutes ) + ":" + (seconds < 10 ? "0"+seconds : seconds); 
+                }
+                if((minutes === 0 && seconds === 0) || this.state.isCounting){
+                    this.setState({ isCounting: true })
+                    clearInterval(clockFunction);
+                }
+                this.setState({ isCounting: false })
+            }, 1000);
+    }
+
+    handleClick(info){
+        const type = info[0];
+        const todo = info[1];
+        if( (this.state[type] === 1 && todo === "dec") || (todo==="inc" && this.state[type] === 60)){
+            return;
+        }
+        if(todo === "inc"){
+            this.setState({ [type]: this.state[type] + 1 })
+        } else {
+            this.setState({ [type]: this.state[type] - 1 })
+        }
+    }
+
+    render(){
+        console.log(this.state.isCounting)
+        return(
+            <div className="wrapper">
+                <div id="title">Pomodoro Clock</div>
+                <div id="settings">
+                    <div id="break">
+                        <div id="break-label">Break Length</div>
+                        <div className="options">
+                            <div id="break-decrement" onClick={() => this.handleClick(["break", "dec"])}></div>
+                            <div id="break-length">{this.state.break}</div>
+                            <div id="break-increment" onClick={() => this.handleClick(["break", "inc"])}></div>
+                        </div>
+                    </div>
+                    <div id="session">
+                        <div id="session-label">Session Length</div>
+                        <div className="options">
+                            <div id="session-decrement" onClick={() => this.handleClick(["length", "dec"])}></div>
+                            <div id="session-length">{this.state.length}</div>
+                            <div id="session-increment" onClick={() => this.handleClick(["length", "inc"])}></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="time-wrapper">
+                    <div id="timer-label">Session</div>
+                    <div id="time-left">{this.state.timer}</div>
+                </div>
+                <div id="start_stop" onClick={this.startStop}>Start</div>
+                <div id="reset" onClick={this.resetAll}>Reset</div>
+            </div>
+        )
+    }
+}
+
+export default Clock;
