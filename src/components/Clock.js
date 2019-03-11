@@ -42,14 +42,14 @@ class Clock extends Component{
         // Updates session, break and timer 
         if(value === "dec"){ 
             if(type === "session"){
-                const timer = this.state.session < 10 ? "0"+(this.state.session-1)+":00" : (this.state.session-1)+":00";
+                const timer = this.state.session <= 10 ? "0"+(this.state.session-1)+":00" : (this.state.session-1)+":00";
                 this.setState({ session: this.state.session-1, timer });
             } else{
                 this.setState({ breaks: this.state.breaks-1 });
             }
         } else{
             if(type === "session"){
-                const timer = this.state.session < 10 ? "0"+(this.state.session+1)+":00" : (this.state.session+1)+":00";
+                const timer = this.state.session < 9 ? "0"+(this.state.session+1)+":00" : (this.state.session+1)+":00";
                 this.setState({ session: this.state.session+1, timer });
             } else{
                 this.setState({ breaks: this.state.breaks+1 });
